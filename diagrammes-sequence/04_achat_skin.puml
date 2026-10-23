@@ -1,0 +1,23 @@
+@startuml
+title 4. Acheter une apparence
+
+actor Joueur
+participant Client
+participant MarketService
+
+Joueur -> Client : ouvre la marketplace
+Client -> MarketService : demande la liste des skins
+MarketService --> Client : liste des skins
+
+Joueur -> Client : achète un skin
+Client -> MarketService : demande d'achat du skin
+MarketService --> Client : un calcul à résoudre (ex. 7 x 8)
+
+Joueur -> Client : donne la réponse
+Client -> MarketService : envoie la réponse au calcul
+alt bonne réponse
+  MarketService --> Client : skin débloqué pour tous
+else mauvaise réponse
+  MarketService --> Client : achat refusé
+end
+@enduml

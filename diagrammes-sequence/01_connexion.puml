@@ -1,0 +1,26 @@
+@startuml
+title 1. Inscription et connexion
+
+actor Joueur
+participant Client
+participant PlayerService
+database "BD Joueurs" as BD
+
+== Inscription ==
+Joueur -> Client : remplit email + mot de passe
+Client -> PlayerService : demande d'inscription (email, mot de passe)
+PlayerService -> BD : enregistre le joueur
+PlayerService --> Client : compte créé
+
+== Connexion ==
+Joueur -> Client : saisit email + mot de passe
+Client -> PlayerService : demande de connexion (email, mot de passe)
+PlayerService -> BD : cherche le joueur
+alt identifiants corrects
+  PlayerService --> Client : token JWT
+  Client --> Joueur : tableau de bord
+else identifiants faux ou joueur banni
+  PlayerService --> Client : erreur
+  Client --> Joueur : message d'erreur
+end
+@enduml

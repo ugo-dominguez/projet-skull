@@ -1,0 +1,25 @@
+@startuml
+title 2. Créer et rejoindre une partie
+
+actor "Joueur A" as A
+actor "Joueur B" as B
+participant Client
+participant GameService
+
+A -> Client : crée une partie (nb joueurs, nb IA)
+Client -> GameService : demande de création (nb joueurs, nb IA)
+GameService --> Client : partie créée, A est dedans
+
+B -> Client : ouvre le salon
+Client -> GameService : demande la liste des parties ouvertes
+GameService --> Client : liste des parties ouvertes
+
+B -> Client : rejoint la partie
+Client -> GameService : demande à rejoindre la partie
+GameService --> Client : B a rejoint
+
+A -> Client : lance la partie
+Client -> GameService : demande de lancement
+GameService -> GameService : complète avec des IA\net distribue les disques
+GameService --> Client : partie lancée
+@enduml
