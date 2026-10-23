@@ -1,0 +1,23 @@
+@startuml
+title 7. Consulter l'historique et le classement
+actor Joueur
+participant Client
+participant LadderService
+database "BD Historique" as BD
+
+== Accès à l'historique personnel ==
+Joueur -> Client : clique sur "Mon Historique"
+Client -> LadderService : demande d'historique (idJoueur)
+LadderService -> BD : cherche les parties du joueur
+BD --> LadderService : liste des parties (date, score, tuiles restantes, joueurs)
+LadderService --> Client : données de l'historique
+Client --> Joueur : affiche la liste des parties
+
+== Accès au classement général ==
+Joueur -> Client : clique sur "Classement"
+Client -> LadderService : demande du classement général
+LadderService -> BD : récupère les statistiques de tous les joueurs
+LadderService -> LadderService : trie par victoires / ratio
+LadderService --> Client : liste des meilleurs joueurs
+Client --> Joueur : affiche le classement
+@enduml
