@@ -1,0 +1,43 @@
+@startuml
+title 8. Tour de l'IA (Logique de décision)
+participant GameService
+participant "Module IA" as IA
+database "BD Parties" as BD
+
+GameService -> GameService : détecte que c'est le tour de l'IA
+GameService -> IA : demande d'action (état de la table, tuiles de l'IA)
+activate IA
+
+alt [L'IA doit poser une tuile (début de manche ou continue)]
+    IA -> IA : génère nombre aléatoire (1-100)
+    alt [Résultat <= 80]
+        IA -> IA : choisit une tuile au hasard (fleur ou crâne)
+        IA --> GameService : action = POSER_TUILE (tuile choisie)
+    else [Résultat > 80]
+        IA -> IA : décide d'enchérir
+        IA -> IA : calcule l'enchère (nb de tuiles posées)
+        IA --> GameService : action = ENCHERIR (valeur)
+    end
+
+else [L'IA doit surenchérir ou se retirer]
+    IA -> IA : vérifie si elle a posé un crâne
+    alt [L'IA a posé un crâne]
+        IA -> IA : génère nombre aléatoire (1-100)
+        alt [Résultat <= 20]
+            IA --> GameService : action = SURENCHERIR (enchère+1)
+        else [Résultat > 20]
+            IA --> GameService : action = SE_RETIRER
+        end
+    else [L'IA n'a posé que des fleurs]
+        IA -> IA : génère nombre aléatoire (1-100)
+        alt [Résultat <= 70]
+            IA --> GameService : action = SURENCHERIR (enchère+1)
+        else [Résultat > 70]
+            IA --> GameService : action = SE_RETIRER
+        end
+    end
+end
+deactivate IA
+
+GameService -> BD : sauvegarde l'état de la partie mis à jour
+@enduml
