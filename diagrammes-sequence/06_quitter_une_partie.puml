@@ -1,0 +1,22 @@
+@startuml
+title 6. Quitter une partie
+actor Joueur
+participant Client
+participant GameService
+database "BD Parties" as BD
+
+Joueur -> Client : clique sur "Quitter la partie"
+Client -> GameService : demande de quitter la partie (idPartie, idJoueur)
+
+alt La partie n'a pas encore commencé
+    GameService -> BD : retire le joueur de la partie
+    GameService --> Client : joueur retiré
+    Client --> Joueur : retour au tableau de bord
+else La partie est en cours
+    GameService -> GameService : marque le joueur comme "perdant" (abandon)
+    GameService -> GameService : génère une IA de remplacement
+    GameService -> BD : met à jour la partie (remplace joueur par IA)
+    GameService --> Client : joueur remplacé par une IA
+    Client --> Joueur : retour au tableau de bord (défaite enregistrée)
+end
+@enduml
