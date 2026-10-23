@@ -1,0 +1,22 @@
+@startuml
+title 5. Signaler et bannir un joueur
+
+actor Joueur
+actor Admin
+participant Client
+participant PlayerService
+
+Joueur -> Client : signale un joueur
+Client -> PlayerService : envoie le signalement
+PlayerService --> Client : signalement enregistré
+
+Admin -> Client : ouvre la liste des signalements
+Client -> PlayerService : demande les signalements
+PlayerService --> Client : liste
+
+Admin -> Client : bannit le joueur
+Client -> PlayerService : demande le bannissement
+PlayerService --> Client : joueur banni
+
+note over PlayerService : Le joueur banni ne peut\nplus se connecter
+@enduml

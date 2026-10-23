@@ -1,0 +1,38 @@
+@startuml
+title 3. Jouer une manche
+
+actor Joueur
+participant Client
+participant GameService
+participant LadderService
+
+loop chaque joueur à son tour
+  alt poser un disque
+    Joueur -> Client : pose fleur ou crâne
+    Client -> GameService : envoie le disque posé
+  else enchérir
+    Joueur -> Client : annonce un nombre de fleurs
+    Client -> GameService : envoie l'enchère
+  else se retirer
+    Client -> GameService : envoie le retrait
+  end
+end
+
+note over GameService : Le plus fort enchérisseur\ndoit faire le défi
+
+loop retourner les disques (sa pile en premier)
+  Joueur -> Client : retourne un disque
+  Client -> GameService : demande à retourner le disque
+end
+
+alt que des fleurs
+  GameService -> GameService : +1 point
+else un crâne
+  GameService -> GameService : perd un disque
+end
+
+opt un joueur a 2 points
+  GameService -> LadderService : envoie le résultat de la partie
+  GameService --> Client : fin de partie
+end
+@enduml
