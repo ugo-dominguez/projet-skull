@@ -1,5 +1,5 @@
 ## Livrable n°1 - Conception et initialisation
-EDT : **24 octobre 2026**
+EDT : **25 octobre 2026**
 
 Ce premier livrable comprend la conception par défaut du projet. 
 Il va définir l’architecture, des modèles de données, les interactions entre les différents services, et les points d'API nécessaires.
