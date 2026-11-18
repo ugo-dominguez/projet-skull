@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: skull
+      POSTGRES_PASSWORD: skull
+      POSTGRES_DB: playerdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U skull -d playerdb" ]
+      interval: 5s
+      retries: 5
+
+  player-service:
+    build: ./player-service
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/playerdb
+      SPRING_DATASOURCE_USERNAME: skull
+      SPRING_DATASOURCE_PASSWORD: skull
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+
+  game-service:
+    build: ./game-service
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/gamedb
+      SPRING_DATASOURCE_USERNAME: skull
+      SPRING_DATASOURCE_PASSWORD: skull
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+
+  ladder-service:
+    build: ./ladder-service
+    ports:
+      - "8083:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ladderdb
+      SPRING_DATASOURCE_USERNAME: skull
+      SPRING_DATASOURCE_PASSWORD: skull
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+
+  market-service:
+    build: ./market-service
+    ports:
+      - "8084:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/marketdb
+      SPRING_DATASOURCE_USERNAME: skull
+      SPRING_DATASOURCE_PASSWORD: skull
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

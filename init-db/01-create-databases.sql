@@ -1,0 +1,3 @@
+CREATE DATABASE gamedb;
+CREATE DATABASE ladderdb;
+CREATE DATABASE marketdb;
