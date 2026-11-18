@@ -1,24 +1,19 @@
-## Livrable n°1 - Conception et initialisation
-EDT : **25 octobre 2026**
+## Livrable n°2 - Développement principal, utilisateurs et parties
+EDT : **29 novembre 2026**
 
-Ce premier livrable comprend la conception par défaut du projet. 
-Il va définir l’architecture, des modèles de données, les interactions entre les différents services, et les points d'API nécessaires.
+Ce deuxième livrable contient les services concernant les utilisateurs et les parties.
+En se basant sur la conception (possibles modifications si besoin), le PlayerService et le GameService auront une première version.
 
-### 1. Architecture des Web Services
-Organiser les Web Services entre elles, et préciser le but de chacun des services grâce à un __diagramme de composants UML__.
+### 1. Infrastructure
+Squelette Spring Boot de chaque service (PlayerService, GameService, LadderService, MarketService), un `Dockerfile` par service et un `docker-compose.yaml` qui lance l'ensemble. Mise en place de la base de données avec persistance entre les redémarrages.
 
-### 2. Scénarios d'utilisation et API
-Préciser l'utilisation de l'application par les utilisateurs, en fonction des rôles et des différents scénarios à l'aide d'un __diagramme de séquence UML__. 
-Définir les points d'API de chaque Web Service de l'application sur __un document OpenAPI__.
+### 2. PlayerService
+Le PlayerService sera implémenté, l'inscription, la connexion et la création de comptes administrateurs seront disponibles.
+Les signalements pourront être exécuté par des utilisateurs, et les bannissements par des administrateurs.
 
-### 3. Modélisation des objets et des données
-Définir les classes et méthodes qui seront utilisés comme objets métiers via un __diagramme de classe UML__. (si possible, proposer un squelette code de l'application)
-Modéliser la base de données relationnelle, grâce à un __modèle conceptuel de données (MCD)__.
+### 3. GameService 
+La création de parties, sélection du nombre de joueurs et d'IA, la liste des parties ouvertes et la possibilité de rejoindre ou quitté un salon.
+Si possible, effectuer un squelette du code concernant la logique de jeu.
 
-### 4. Répartition
-ADJAS Hicham : ?
-BOUAISS Bilal : ?
-CHERIF Moussa : Diagramme de composants
-DOMINGUEZ Ugo : MCD
-EL-ALLAM Youssef : Diagramme de classe & Diagramme de séquence
-Khadjou Youssef : Diagramme de séquence
+### 4. Client léger
+Pages inscription, connexion, tableau de bord avec liste des parties.
