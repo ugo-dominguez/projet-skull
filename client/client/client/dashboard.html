@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skull Online - Tableau de bord</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>TABLEAU DE BORD</h1>
+        <div>
+            <span id="userDisplay" style="margin-right: 1rem; color: #cbbfe0;"></span>
+            <button class="btn-danger" id="logoutBtn">Déconnexion</button>
+        </div>
+    </header>
+
+    <div class="card-container">
+        <!-- Liste des parties ouvertes -->
+        <div class="card" style="flex: 2;">
+            <h2>Parties joignables</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Salon</th>
+                        <th>Joueurs</th>
+                        <th>IA</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="gamesList">
+                    <tr>
+                        <td>#101 - Table Mexique</td>
+                        <td>2 / 4</td>
+                        <td>1 IA</td>
+                        <td><button onclick="joinGame(101)">Rejoindre</button></td>
+                    </tr>
+                    <tr>
+                        <td>#102 - Table Japon</td>
+                        <td>3 / 6</td>
+                        <td>2 IA</td>
+                        <td><button onclick="joinGame(102)">Rejoindre</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Créer une nouvelle partie -->
+        <div class="card" style="flex: 1;">
+            <h2>Créer une partie</h2>
+            <form id="createGameForm">
+                <div class="form-group">
+                    <label for="maxPlayers">Nombre de joueurs max (3 à 6)</label>
+                    <input type="number" id="maxPlayers" min="3" max="6" value="4" required>
+                </div>
+                <div class="form-group">
+                    <label for="aiCount">Nombre d'IA</label>
+                    <input type="number" id="aiCount" min="0" max="5" value="1" required>
+                </div>
+                <button type="submit">Lancer le salon</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Historique rapide -->
+    <div class="card-container" style="margin-top: 2rem;">
+        <div class="card">
+            <h2>Mon historique récent</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Participants</th>
+                        <th>Résultat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>18/11/2026</td>
+                        <td>Vous, Ugo, Youssef</td>
+                        <td style="color: #4cc9f0;">Victoire (2 défis)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const GAME_API_URL = "http://localhost:8082/api/games";
+
+        // Affichage de l'utilisateur connecté
+        const email = localStorage.getItem("user_email") || "Joueur invité";
+        document.getElementById("userDisplay").textContent = email;
+
+        // Déconnexion
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            localStorage.removeItem("jwt_token");
+            localStorage.removeItem("user_email");
+            window.location.href = "index.html";
+        });
+
+        // Rejoindre une partie
+        async function joinGame(gameId) {
+            const token = localStorage.getItem("jwt_token");
+            try {
+                await fetch(`${GAME_API_URL}/${gameId}/join`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+            } catch (e) {
+                console.warn("Appel API simulé :", e);
+            }
+            alert(`Vous avez rejoint la partie #${gameId} !`);
+        }
+
+        // Créer une partie
+        document.getElementById("createGameForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const maxPlayers = document.getElementById("maxPlayers").value;
+            const aiCount = document.getElementById("aiCount").value;
+            const token = localStorage.getItem("jwt_token");
+
+            try {
+                await fetch(GAME_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ maxPlayers, aiCount })
+                });
+            } catch (e) {
+                console.warn("Création simulée :", e);
+            }
+
+            const tbody = document.getElementById("gamesList");
+            const newId = Math.floor(Math.random() * 900) + 100;
+            tbody.innerHTML += `
+                <tr>
+                    <td>#${newId} - Salon de ${email.split('@')[0]}</td>
+                    <td>1 / ${maxPlayers}</td>
+                    <td>${aiCount} IA</td>
+                    <td><button onclick="joinGame(${newId})">Rejoindre</button></td>
+                </tr>
+            `;
+        });
+    </script>
+</body>
+</html>
