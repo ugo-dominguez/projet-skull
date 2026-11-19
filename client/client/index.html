@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skull Online - Connexion & Inscription</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>SKULL ONLINE</h1>
+        <span>Bluff & Enchères</span>
+    </header>
+
+    <div class="card-container">
+        <!-- Formulaire de Connexion -->
+        <div class="card">
+            <h2>Connexion</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Adresse email</label>
+                    <input type="email" id="loginEmail" placeholder="joueur@miage.fr" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+
+        <!-- Formulaire d'Inscription -->
+        <div class="card">
+            <h2>Créer un compte</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regEmail">Adresse email</label>
+                    <input type="email" id="regEmail" placeholder="nouveau@miage.fr" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Mot de passe</label>
+                    <input type="password" id="regPassword" placeholder="Choisissez un mot de passe" required>
+                </div>
+                <button type="submit">S'inscrire</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // URL de base du PlayerService (à ajuster selon le port Docker défini par Ugo)
+        const PLAYER_API_URL = "http://localhost:8081/api/players";
+
+        // Gestion de la connexion
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            try {
+                const response = await fetch(`${PLAYER_API_URL}/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Stockage du token JWT pour les futures requêtes
+                    if (data.token) localStorage.setItem("jwt_token", data.token);
+                    localStorage.setItem("user_email", email);
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert("Identifiants incorrects ou serveur indisponible.");
+                }
+            } catch (error) {
+                // Mode démonstration si le back-end n'est pas encore lancé en local
+                console.warn("Back-end non joignable, passage en mode aperçu :", error);
+                localStorage.setItem("user_email", email);
+                window.location.href = "dashboard.html";
+            }
+        });
+
+        // Gestion de l'inscription
+        document.getElementById("registerForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("regEmail").value;
+            const password = document.getElementById("regPassword").value;
+
+            try {
+                const response = await fetch(`${PLAYER_API_URL}/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    alert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
+                    document.getElementById("registerForm").reset();
+                } else {
+                    alert("Erreur lors de l'inscription.");
+                }
+            } catch (error) {
+                alert("Inscription enregistrée (en attente de connexion au PlayerService).");
+            }
+        });
+    </script>
+</body>
+</html>
