@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skull - Tableau de bord</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>SKULL</h1>
+    <button id="logout-btn" class="secondary small">Se déconnecter</button>
+  </header>
+  <main>
+    <div class="card">
+      <div class="actions" style="justify-content: space-between; margin-top: 0;">
+        <h2 style="margin: 0;">Parties ouvertes</h2>
+        <button id="refresh-btn" class="secondary small">Actualiser</button>
+      </div>
+      <div id="message" class="message" hidden></div>
+      <ul id="game-list" class="game-list"></ul>
+      <p id="empty" class="empty" hidden>Aucune partie ouverte pour le moment.</p>
+    </div>
+    <div class="card" style="margin-top: 1.5rem;">
+      <h2>Créer une partie</h2>
+      <form id="create-form">
+        <label>Nombre de joueurs (3 à 6)
+          <input type="number" id="max-players" min="3" max="6" value="4" required>
+        </label>
+        <label>Nombre d'IA
+          <input type="number" id="ai-count" min="0" max="5" value="0" required>
+        </label>
+        <div class="actions">
+          <button type="submit">Créer</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <script src="config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

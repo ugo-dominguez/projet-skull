@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skull - Connexion</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header><h1>SKULL</h1></header>
+  <main>
+    <div class="card">
+      <h2>Connexion</h2>
+      <form id="login-form">
+        <label>Email
+          <input type="email" id="email" required autocomplete="email">
+        </label>
+        <label>Mot de passe
+          <input type="password" id="password" required autocomplete="current-password">
+        </label>
+        <div class="actions">
+          <button type="submit" id="submit-btn">Se connecter</button>
+          <a href="register.html">Créer un compte</a>
+        </div>
+      </form>
+      <div id="message" class="message" hidden></div>
+    </div>
+  </main>
+  <script src="config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
