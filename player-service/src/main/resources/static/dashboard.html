@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Skull - Tableau de bord</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header class="row">
+        <h1>Tableau de bord</h1>
+        <div>
+            <span id="who"></span>
+            <button onclick="logout()">Déconnexion</button>
+        </div>
+    </header>
+
+    <section>
+        <h2>Parties rejoignables</h2>
+        <ul id="games"><li>Chargement...</li></ul>
+    </section>
+
+    <section>
+        <h2>Mon historique</h2>
+        <ul id="history"><li>Chargement...</li></ul>
+    </section>
+
+    <section id="adminPanel" style="display:none">
+        <h2>Panneau admin</h2>
+        <a href="admin.html">Gérer les signalements et bannissements</a>
+    </section>
+</div>
+<script>
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+if (!user) { window.location.href = 'login.html'; }
+
+document.getElementById('who').textContent = user.username + (user.admin ? ' (admin)' : '');
+if (user.admin) document.getElementById('adminPanel').style.display = 'block';
+
+function logout() {
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+}
+
+async function load() {
+    // Parties
+    try {
+        const gamesRes = await fetch('/games', { headers: { 'X-User-Id': user.id } });
+        // En vrai, /games est sur game-service. On passe par le dashboard qui agrège.
+        const dash = await fetch(`/players/${user.id}/dashboard`);
+        const data = await dash.json();
+
+        const gamesEl = document.getElementById('games');
+        if (Array.isArray(data.openGames)) {
+            gamesEl.innerHTML = data.openGames.length
+                ? data.openGames.map(g => `<li>Partie ${g.id} - ${g.status} (${g.humansJoined}/${g.humanSlots} joueurs)</li>`).join('')
+                : '<li>Aucune partie ouverte</li>';
+        } else {
+            gamesEl.innerHTML = `<li>${data.openGames}</li>`;
+        }
+
+        const histEl = document.getElementById('history');
+        if (Array.isArray(data.history)) {
+            histEl.innerHTML = data.history.length
+                ? data.history.map(h => `<li>Partie ${h.gameId} - terminée le ${new Date(h.finishedAt).toLocaleDateString()}</li>`).join('')
+                : '<li>Aucune partie jouée</li>';
+        } else {
+            histEl.innerHTML = `<li>${data.history}</li>`;
+        }
+    } catch (e) {
+        document.getElementById('games').innerHTML = '<li>Erreur de chargement</li>';
+        document.getElementById('history').innerHTML = '<li>Erreur de chargement</li>';
+    }
+}
+load();
+</script>
+</body>
+</html>
