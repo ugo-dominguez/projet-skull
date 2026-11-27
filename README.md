@@ -44,3 +44,12 @@ Content-Type: application/json
 - Email : admin@skull.fr
 - Mot de passe : admin123
 - Cree automatiquement au demarrage s'il n'existe pas.
+
+### Tableau de bord
+GET /players/{id}/dashboard
+
+Retourne les infos du joueur, les parties ouvertes (via game-service)
+et l'historique (via ladder-service).
+
+Note : necessite que game-service et ladder-service soient lances.
+Les URLs sont configurables dans application.properties.
