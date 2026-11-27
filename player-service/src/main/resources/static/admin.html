@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Skull - Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header class="row">
+        <h1>Panneau admin</h1>
+        <button onclick="window.location.href='dashboard.html'">Retour</button>
+    </header>
+
+    <section>
+        <h2>Signalements en attente</h2>
+        <ul id="reports"><li>Chargement...</li></ul>
+    </section>
+
+    <section>
+        <h2>Tous les joueurs</h2>
+        <ul id="players"><li>Chargement...</li></ul>
+    </section>
+</div>
+<script>
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+if (!user || !user.admin) { window.location.href = 'login.html'; }
+
+async function loadReports() {
+    const res = await fetch('/reports');
+    const data = await res.json();
+    const el = document.getElementById('reports');
+    el.innerHTML = data.length
+        ? data.map(r => `<li>
+            ${r.reporterName} a signalé ${r.reportedName} : "${r.reason}"
+            <button onclick="ban('${r.reportedId}')">Bannir ${r.reportedName}</button>
+          </li>`).join('')
+        : '<li>Aucun signalement</li>';
+}
+
+async function loadPlayers() {
+    const res = await fetch('/players');
+    const data = await res.json();
+    const el = document.getElementById('players');
+    el.innerHTML = data.map(p => `<li>
+        ${p.username} (${p.email})
+        ${p.banned ? '<b style="color:red">BANNI</b>' : ''}
+        ${p.banned
+            ? `<button onclick="unban('${p.id}')">Débannir</button>`
+            : `<button onclick="ban('${p.id}')">Bannir</button>`}
+    </li>`).join('');
+}
+
+async function ban(id) {
+    await fetch(`/players/${id}/ban`, {
+        method: 'PUT',
+        headers: { 'X-User-Id': user.id }
+    });
+    loadReports();
+    loadPlayers();
+}
+
+async function unban(id) {
+    await fetch(`/players/${id}/unban`, {
+        method: 'PUT',
+        headers: { 'X-User-Id': user.id }
+    });
+    loadPlayers();
+}
+
+loadReports();
+loadPlayers();
+</script>
+</body>
+</html>
