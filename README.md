@@ -17,3 +17,30 @@ Si possible, effectuer un squelette du code concernant la logique de jeu.
 
 ### 4. Client léger
 Pages inscription, connexion, tableau de bord avec liste des parties.
+## Authentification
+
+### Inscription
+POST /players
+Content-Type: application/json
+
+{
+  "email": "joueur@skull.fr",
+  "username": "Joueur1",
+  "password": "secret123"
+}
+-> 201 Created
+
+### Connexion
+POST /players/login
+Content-Type: application/json
+
+{
+  "email": "joueur@skull.fr",
+  "password": "secret123"
+}
+-> 200 OK avec { id, email, username, admin, token }
+
+### Admin par defaut
+- Email : admin@skull.fr
+- Mot de passe : admin123
+- Cree automatiquement au demarrage s'il n'existe pas.
