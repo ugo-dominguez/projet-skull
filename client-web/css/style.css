@@ -1,0 +1,106 @@
+:root {
+  --bg: #1b1322;
+  --card: #2a1f33;
+  --accent: #c2185b;
+  --accent-soft: #f48fb1;
+  --gold: #f9a825;
+  --text: #f5f0f7;
+  --muted: #b5a7bf;
+  --error: #ff6b6b;
+  --success: #66bb6a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: radial-gradient(circle at top, #3a2447 0%, var(--bg) 70%);
+  color: var(--text);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #3d2d4a;
+}
+
+header h1 { margin: 0; font-size: 1.4rem; color: var(--gold); letter-spacing: 1px; }
+
+main {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+h2 { margin-top: 0; color: var(--accent-soft); }
+
+label { display: block; margin-bottom: 1rem; font-size: 0.9rem; color: var(--muted); }
+
+input {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #4a3a5a;
+  background: #1f1628;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+button {
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:hover:not(:disabled) { opacity: 0.85; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.secondary { background: #4a3a5a; }
+button.small { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+
+.actions { display: flex; gap: 0.75rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
+
+a { color: var(--accent-soft); }
+
+.message {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.message.error { background: rgba(255, 107, 107, 0.15); color: var(--error); }
+.message.success { background: rgba(102, 187, 106, 0.15); color: var(--success); }
+
+.game-list { list-style: none; padding: 0; margin: 0; }
+
+.game-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #3d2d4a;
+}
+.game-item:last-child { border-bottom: none; }
+
+.game-meta { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+
+.empty { color: var(--muted); font-style: italic; text-align: center; padding: 1.5rem 0; }
