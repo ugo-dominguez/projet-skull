@@ -71,6 +71,36 @@ public class PlayerController {
         return repo.findAll().stream().map(PlayerController::toView).toList();
     }
 
+    // --- Bannir (admin seulement) ---
+    @PutMapping("/{id}/ban")
+    public PlayerView ban(@PathVariable UUID id, @RequestHeader("X-User-Id") UUID callerId) {
+        requireAdmin(callerId);
+        Player target = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Joueur inconnu"));
+        target.setBanned(true);
+        repo.save(target);
+        return toView(target);
+    }
+
+    // --- Débannir (admin seulement) ---
+    @PutMapping("/{id}/unban")
+    public PlayerView unban(@PathVariable UUID id, @RequestHeader("X-User-Id") UUID callerId) {
+        requireAdmin(callerId);
+        Player target = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Joueur inconnu"));
+        target.setBanned(false);
+        repo.save(target);
+        return toView(target);
+    }
+
+    private void requireAdmin(UUID callerId) {
+        Player caller = repo.findById(callerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utilisateur inconnu"));
+        if (!caller.isAdmin()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Action réservée aux admins");
+        }
+    }
+
     private static PlayerView toView(Player p) {
         return new PlayerView(p.getId(), p.getEmail(), p.getUsername(), p.isAdmin(), p.isBanned());
     }
